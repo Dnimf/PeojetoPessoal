@@ -3,7 +3,7 @@ from .models import *
 class PokSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pokemon
-        fields =['id','name','imagem','tipo','fraqueza']
+        fields =['id','name','imagem','tipo','fraquezas','efetivos','resistencia']
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tipo

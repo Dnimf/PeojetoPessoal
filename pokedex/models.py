@@ -7,8 +7,10 @@ class Pokemon(models.Model):
     tipo = models.TextField()
     fraquezas = models.TextField()
     efetivos = models.TextField()
+    resistencia = models.TextField()
+    
     def __str__(self):
-        return f"{self.name}: {self.tipo}"
+        return f"{self.name}: {self.tipo}, {self.efetivos},{self.resistencia}"
 
 class Treinador(models.Model):
     name = models.CharField(max_length=100)
