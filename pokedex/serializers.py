@@ -7,4 +7,4 @@ class PokSerializer(serializers.ModelSerializer):
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tipo
-        fields =['id','name','fraquezas','efetivos','resistencia']
+        fields =['id','name','fraquezas','efetivos','imunidade','resistencia']

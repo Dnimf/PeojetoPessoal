@@ -27,6 +27,7 @@ class Tipo(models.Model):
     name = models.CharField(max_length=100)
     fraquezas = models.TextField()
     efetivos = models.TextField()
+    imunidade = models.TextField()
     resistencia = models.TextField()
     def __str__(self):
-        return f"{self.name}: {self.fraquezas}, {self.efetivos}, {self.resistencia}"
+        return f"{self.name}: {self.fraquezas}, {self.efetivos}, {self.imunidade}, {self.resistencia}"
