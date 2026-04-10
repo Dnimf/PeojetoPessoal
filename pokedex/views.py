@@ -19,28 +19,69 @@ headers = {
 }
 
 
-traducao = {"fire":"Fogo", "plant": "Planta", "water":"Água","fairy": "Fada","dragon":"Dragão", "steel": "Aço", "poison":"Venenoso", "eletric": "Eletrico", "ground":"Terrestre", "rock":"Pedra", "dark":"Sombrio", "bug":"Inseto", "ice":"Gelo","normal":"Normal", "flying":"Voador", "fighting":"Lutador","ghost":"Fantasma","psychic":"Psiquico"}
+traducao = {"fire":"Fogo", "grass": "Planta", "water":"Água","fairy": "Fada","dragon":"Dragão", "steel": "Aço", "poison":"Venenoso", "electric": "Elétrico", "ground":"Terrestre", "rock":"Pedra", "dark":"Sombrio", "bug":"Inseto", "ice":"Gelo","normal":"Normal", "flying":"Voador", "fighting":"Lutador","ghost":"Fantasma","psychic":"Psiquico"}
 place_holder = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
 
 def acha_tipo(tipos):
-    stats = Tipo.objects.get(name=tipos[0])
+    tipo1 = traducao[tipos[0]]
+    types = tipo1
+    stats = Tipo.objects.get(name=tipo1)
     fraquezas =stats.fraquezas
     efetivo = stats.efetivos
     resistencia = stats.resistencia
     imunidade = stats.imunidade
-    if len(tipos)==3:
-        stats = Tipo.objects.get(name=tipos[1])
-        fraquezas1 =stats.fraquezas
-        fraquezas1=fraquezas1.split()
-        efetivo1 = stats.efetivos
-        efetivo1=efetivo1.split()
-        resistencia1 = stats.resistencia 
-        resistencia1 = resistencia1.split()
-        imunidade1 = stats.imunidade
-        imunidade1 = imunidade1.split()
-        fraquezas_1 = fraquezas.split()
+    if len(tipos)>=3:
+        tipo2 = traducao[tipos[1]]
+        types = types+"_"+tipo2
+        stats1 = Tipo.objects.get(name=tipo2)
+        fraquezas1 =stats1.fraquezas
+        fraquezas1=fraquezas1.split("_")
+        efetivo1 = stats1.efetivos
+        efetivo1=efetivo1.split("_")
+        resistencia1 = stats1.resistencia 
+        resistencia1 = resistencia1.split("_")
+        imunidade1 = stats1.imunidade
+        imunidade1 = imunidade1.split("_")
         
-    result = [fraquezas,efetivo, resistencia, imunidade]
+        
+        
+        
+        fraquezas_0 = fraquezas.split("_")
+        efetivo_0 = efetivo.split("_")
+        resistencia_0 = resistencia.split("_")
+        imunidade_0 = imunidade.split("_")
+        fraquezas = []
+        imunidades = []
+        imunidades_final = "";
+        for i in fraquezas1:
+            if i not in resistencia_0:
+                fraquezas.append(i)
+        for j in fraquezas_0:
+            if j not in resistencia1:
+                fraquezas.append(j)
+        efetivo2 = [] 
+        for k in efetivo1:
+            efetivo2.append(k)
+        for h in efetivo_0:
+            efetivo2.append(h)
+        for l in imunidade1:
+            if l in imunidade_0:
+                imunidades.append(l);
+                
+        fraquezas_final = "_".join(fraquezas)
+        efetivo_final = "_".join(efetivo2)
+        if imunidades == []:
+            imunidades_final = "Nenhuma";
+        elif len(imunidades) == 1:
+            imunidades_final = imunidades[0];
+        else:
+            imunidades_final = "_".join(imunidades)
+    # result = [fraquezas,efetivo, resistencia, imunidade]
+        result = [types, efetivo_final, fraquezas_final, imunidades_final]
+    else:
+        result = [types, efetivo, fraquezas, imunidade]
+        
+        
     return result
 def index(request):
     return HttpResponse("Olá mundo! Este é o app notes de Tecnologias Web do Insper.")
@@ -74,6 +115,15 @@ def pokemon_banco(request, nome):
                     if "Hebrew" not in result[i]:
                         x = result[i+1].split(",")
                         break
+            oi = acha_tipo(x)
+            # return Response(f"{oi}")
+            tip1 = oi[0].split("_")
+            tip1 = " ".join(tip1)
+            efetivo = oi[1].split("_")
+            efetivo = " ".join(efetivo)
+            fraquezas = oi[2].split("_")
+            fraquezas = " ".join(fraquezas)
+            resistencia = oi[3]
             pokemon = Pokemon(name=nome,tipo=tip1, imagem = place_holder, fraquezas=fraquezas, efetivos=efetivo, resistencia=resistencia)
             # return Response({"f":f"{efetivo}"})
             # pokemon.save()
@@ -95,6 +145,7 @@ def tipos(request,nome):
     if request.method == "PUT":
         tipo = Tipo.objects.get(name=nome)
         tipo.resistencia = request.data["resistencia"]
+        tipo.save()
     tipo_serialized = TypeSerializer(tipo)
     return Response(tipo_serialized.data)
 # parei no pedra
