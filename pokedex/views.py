@@ -92,8 +92,10 @@ def pokemon_banco(request, nome):
         name = new_pok["name"]
         img = new_pok["imagem"]
         tipo = new_pok["tipo"]
-        fraqueza = new_pok["fraqueza"]
-        pokemon = Pokemon(name=name, imagem=img, tipo=tipo, fraqueza=fraqueza)
+        fraqueza = new_pok["fraquezas"]
+        efetivos = new_pok["efetivos"]
+        resistencia = new_pok["resistencia"]
+        pokemon = Pokemon(name=name, imagem=img, tipo=tipo, fraquezas=fraqueza, efetivos = efetivos, resistencia = resistencia )
         pokemon.save()
     if request.method == "GET":
         # try:
